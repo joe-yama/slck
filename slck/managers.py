@@ -9,6 +9,10 @@ from slck.user import User
 from slck.message import Message
 
 
+class ChannelNotFoundError(Exception):
+    pass
+
+
 class ChannelManager(WebClient):
     def list(self, prefix: str = "") -> List[Channel]:
         next_cursor: str = ""  # for pagenation
@@ -29,7 +33,10 @@ class ChannelManager(WebClient):
         return hit_channels
 
     def find(self, name: str) -> Channel:
-        return Channel(id="channelid", name="channelname")
+        for channel in self.list(prefix=name):
+            if channel.name == name:
+                return channel
+        raise ChannelNotFoundError(f"Channel named {name} is not found.")
 
 
 class UserManager(WebClient):
