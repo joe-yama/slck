@@ -1,7 +1,8 @@
+import pytest
 from typing import Dict, List
 
 from mock_slack_client import MockSlackClient
-from slck.user import User, UserManager
+from slck.user import User, UserManager, UserNotFoundError
 
 
 class TestUserManager:
@@ -39,3 +40,9 @@ class TestUserManager:
         assert user["id"] == "W07QCRPA4"
         assert user["name"] == "glinda"
         assert user["real_name"] == "Glinda Southgood"
+
+    def test__cannot_find_user(self) -> None:
+        client: MockSlackClient = MockSlackClient()
+        user_manager: UserManager = UserManager(client)
+        with pytest.raises(UserNotFoundError):
+            user_manager.find(real_name="No One")

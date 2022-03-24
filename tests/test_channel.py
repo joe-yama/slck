@@ -45,7 +45,7 @@ class TestChannelManager:
         assert channel["name"] == "random"
         assert channel["id"] == "C222"
 
-    def test__find_no_channel(self) -> None:
+    def test__cannot_find_channel(self) -> None:
         client: MockSlackClient = MockSlackClient()
         channel_manager: ChannelManager = ChannelManager(client)
         with pytest.raises(ChannelNotFoundError):

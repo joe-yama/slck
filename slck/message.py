@@ -44,23 +44,15 @@ class MessageManager:
 
     def list(
         self,
-        channel_name: str = "",
-        channel_id: str = "",
+        channel: str,  # channel id or channel name (depends on argument `name`)
+        name: bool = True,  # if False, `channel` is considered as channel ID
     ) -> List[Message]:
-        if channel_id == "" and channel_name == "":
-            raise ValueError(
-                "One of arguments (channel_id or channel_name) is required."
-            )
-        if channel_id and channel_name:
-            raise ValueError(
-                """
-                Recieved both of channel_id and channel_name.
-                Desired: Either one of arguments (channel_id or channel_name).
-            """
-            )
-        if channel_name:
+        channel_id: str = ""
+        if name:
             channel_manager: ChannelManager = ChannelManager(self.client)
-            channel_id = channel_manager.find(name=channel_name)["id"]
+            channel_id = channel_manager.find(name=channel)["id"]
+        else:
+            channel_id = channel
 
         messages: List[Message] = []
         next_cursor: str = ""  # for pagenation

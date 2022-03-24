@@ -9,10 +9,16 @@ class TestMessageManager:
         client: MockSlackClient = MockSlackClient()
         MessageManager(client)
 
-    def test__list(self) -> None:
+    def test__list_message_by_channel_id(self) -> None:
         client: MockSlackClient = MockSlackClient()
         message_manager: MessageManager = MessageManager(client)
-        messages: List[Message] = message_manager.list(channel_id="C111")
+        messages: List[Message] = message_manager.list(channel="C111", name=False)
+        assert len(messages) == 4
+
+    def test__list_message_by_channel_name(self) -> None:
+        client: MockSlackClient = MockSlackClient()
+        message_manager: MessageManager = MessageManager(client)
+        messages: List[Message] = message_manager.list(channel="general", name=True)
         assert len(messages) == 4
 
     # def test__list_real(self, token):
