@@ -1,11 +1,9 @@
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
 class User:
     id: str
     name: str
-    real_name: str
-
-    def __str__(self) -> str:
-        return self.real_name
+    real_name: Optional[str] = None
