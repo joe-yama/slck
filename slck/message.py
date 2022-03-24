@@ -1,12 +1,10 @@
 from dataclasses import dataclass
-from typing import List
-from typing import Dict
-
-from slck.user import User
+from typing import Dict, List
 
 from slack_sdk import WebClient
 from slack_sdk.web import SlackResponse
 from slck.channel import ChannelManager
+from slck.user import User
 
 
 @dataclass

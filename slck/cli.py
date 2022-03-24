@@ -4,8 +4,8 @@ import dotenv
 import fire
 from slack_sdk import WebClient
 from slck.channel import ChannelManager
-from slck.user import UserManager
 from slck.message import MessageManager
+from slck.user import UserManager
 
 
 class SlackManager:

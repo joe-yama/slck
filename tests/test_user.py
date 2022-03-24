@@ -1,9 +1,7 @@
 from typing import Dict, List
 
-import pytest
 from mock_slack_client import MockSlackClient
-from slck.user import UserManager
-from slck.user import User
+from slck.user import User, UserManager
 
 
 class TestUserManager:

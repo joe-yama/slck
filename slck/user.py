@@ -1,9 +1,5 @@
-from dataclasses import dataclass
-from typing import Optional
-from typing import List
-from typing import Dict
-
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
+from typing import Dict, List, Optional
 
 from slack_sdk import WebClient
 from slack_sdk.web import SlackResponse

@@ -1,8 +1,7 @@
 from typing import List
 
 from mock_slack_client import MockSlackClient
-from slck.message import Message
-from slck.message import MessageManager
+from slck.message import Message, MessageManager
 
 
 class TestMessageManager:

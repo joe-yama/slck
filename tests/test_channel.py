@@ -1,11 +1,8 @@
-import pytest
-from typing import Dict
-from typing import List
+from typing import Dict, List
 
+import pytest
 from mock_slack_client import MockSlackClient
-from slck.channel import Channel
-from slck.channel import ChannelManager
-from slck.channel import ChannelNotFoundError
+from slck.channel import Channel, ChannelManager, ChannelNotFoundError
 
 
 class TestChannelManager:
