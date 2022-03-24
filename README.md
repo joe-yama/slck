@@ -25,7 +25,7 @@ Message(message_type='message', user=User(id='U031L3JNBKS', name='taro', real_na
 ## Installation
 
 ```bash
-pip install slck
+pip install slck-cli
 ```
 
 ## License
