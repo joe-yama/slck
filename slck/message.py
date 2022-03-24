@@ -1,7 +1,12 @@
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import List
+from typing import Dict
 
 from slck.user import User
+
+from slack_sdk import WebClient
+from slack_sdk.web import SlackResponse
+from slck.channel import ChannelManager
 
 
 @dataclass
@@ -33,3 +38,44 @@ def parse_message(message: Dict) -> Message:
         num_replyuser=num_replyuser,
         num_reaction=num_reaction,
     )
+
+
+class MessageManager:
+    def __init__(self, client: WebClient) -> None:
+        self.client = client
+
+    def list(
+        self,
+        channel_name: str = "",
+        channel_id: str = "",
+    ) -> List[Message]:
+        if channel_id == "" and channel_name == "":
+            raise ValueError(
+                "One of arguments (channel_id or channel_name) is required."
+            )
+        if channel_id and channel_name:
+            raise ValueError(
+                """
+                Recieved both of channel_id and channel_name.
+                Desired: Either one of arguments (channel_id or channel_name).
+            """
+            )
+        if channel_name:
+            channel_manager: ChannelManager = ChannelManager(self.client)
+            channel_id = channel_manager.find(name=channel_name)["id"]
+
+        messages: List[Message] = []
+        next_cursor: str = ""  # for pagenation
+        while True:
+            response: SlackResponse = self.client.conversations_history(
+                channel=channel_id, next_cursor=next_cursor
+            )
+            for message in response["messages"]:
+                if message["type"] == "message":
+                    m = parse_message(message)
+                    messages.append(m)
+            if response["has_more"] is True:
+                next_cursor = response["response_metadata"]["next_cursor"]
+            else:
+                break
+        return messages
