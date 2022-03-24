@@ -2,6 +2,7 @@
 name = "slck"
 version = "0.1.0"
 description = "Simple cli tool to manage your slack workspace"
+readme = "README.md"
 authors = ["joe-yama <s1r0mqme@gmail.com>"]
 license = "MIT"
 repository = "https://github.com/joe-yama/slck"
