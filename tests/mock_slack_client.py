@@ -1,12 +1,14 @@
 import json
 import os
+from pathlib import Path
 from typing import Any, Dict
 
 from slack_sdk import WebClient
 from slack_sdk.web import SlackResponse
 
-TEST_ROOT_DIR = os.path.dirname(__file__)
-TEST_DATA_DIR = os.path.join(TEST_ROOT_DIR, "data")
+PROJECT_ROOT_DIR: str = str(Path(__file__).parent.parent)
+TEST_ROOT_DIR: str = str(Path(__file__).parent)
+TEST_DATA_DIR: str = str(Path(TEST_ROOT_DIR) / "data")
 
 
 def get_slackresponse(data: Dict) -> SlackResponse:
@@ -48,7 +50,7 @@ class MockSlackClient(WebClient):
             return get_slackresponse(web_response)
 
     def chat_getPermalink(
-        self, *, channel: str, message_ts: str, **kwargs
+        self, *, channel: str, message_ts: str, **kwargs: Any
     ) -> SlackResponse:
         with open(
             os.path.join(TEST_DATA_DIR, "web_response_chat_getPermalink.json")

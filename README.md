@@ -1,4 +1,4 @@
-# slck: Simple cli tool to manage your slack workspace
+# slck-cli: Simple cli tool to manage your slack workspace
 
 ## Basic Usage
 
@@ -25,7 +25,7 @@ Message(message_type='message', user=User(id='U031L3JNBKS', name='taro', real_na
 ## Installation
 
 ```bash
-$ pip install slck
+pip install slck
 ```
 
 ## License

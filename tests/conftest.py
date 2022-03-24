@@ -1,17 +1,14 @@
 import os
+from typing import Optional
 
 import dotenv
 import pytest
-from mock_slack_client import MockSlackClient
 
 
 @pytest.fixture
 def token() -> str:
-    dotenv.load_dotenv()
-    token: str = os.environ["SLACK_BOT_TOKEN"]
+    dotenv.load_dotenv(override=True)
+    token: Optional[str] = os.getenv("SLACK_BOT_TOKEN")
+    if token is None:
+        raise KeyError("SLACK_BOT_TOKEN is not found.")
     return token
-
-
-@pytest.fixture
-def mock_client() -> MockSlackClient:
-    return MockSlackClient()

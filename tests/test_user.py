@@ -1,6 +1,6 @@
-import pytest
 from typing import List
 
+import pytest
 from mock_slack_client import MockSlackClient
 from slck.user import User, UserManager, UserNotFoundError
 
