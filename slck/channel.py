@@ -1,8 +1,10 @@
+import sys
 from dataclasses import dataclass
 from typing import List, Optional
 
 from slack_sdk import WebClient
 from slack_sdk.web import SlackResponse
+from slck.utils import confirm_user_input
 
 
 class ChannelNotFoundError(Exception):
@@ -52,3 +54,28 @@ class ChannelManager:
             raise ChannelNotFoundError
         assert len(channels) == 1
         return channels
+
+    def archive(self, prefix: str, yes: bool = False) -> List[Channel]:
+        target_channels: List[Channel] = self.list(prefix=prefix)
+        if not target_channels:
+            raise ChannelNotFoundError(f"No channels found (prefix={prefix})")
+        for channel in target_channels:
+            sys.stdout.write(f"{channel}\n")
+        archived_channels: List[Channel] = []
+        if yes or confirm_user_input(
+            f"Do you want to archive {len(target_channels):,d} channels?"
+        ):
+            for channel in target_channels:
+                self.client.conversations_join(channel=channel.id)
+                response_for_archive: SlackResponse = self.client.conversations_archive(
+                    channel=channel.id
+                )
+                if response_for_archive["ok"]:
+                    sys.stdout.write(f"Archived channel: {channel}" + "\n")
+                    archived_channels.append(channel)
+        else:
+            sys.stdout.write(
+                f"Don't worry! {len(target_channels):,d} channels were left unchanged."
+                + "\n"
+            )
+        return archived_channels

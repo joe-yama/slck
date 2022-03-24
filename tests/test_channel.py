@@ -15,7 +15,7 @@ class TestChannelManager:
         client: MockSlackClient = MockSlackClient()
         channel_manager: ChannelManager = ChannelManager(client)
         channels: List[Channel] = channel_manager.list()
-        assert len(channels) == 2
+        assert len(channels) == 3
 
     def test__list_channels_with_prefix(self) -> None:
         client: MockSlackClient = MockSlackClient()
@@ -50,3 +50,8 @@ class TestChannelManager:
         channel_manager: ChannelManager = ChannelManager(client)
         with pytest.raises(ChannelNotFoundError):
             channel_manager.find(name="fake-channel")
+
+    def test__archive_channels(self) -> None:
+        client: MockSlackClient = MockSlackClient()
+        channel_manager: ChannelManager = ChannelManager(client)
+        print(channel_manager.archive(prefix="random", yes=True))

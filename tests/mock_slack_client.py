@@ -34,9 +34,6 @@ class MockSlackClient(WebClient):
             web_response: Dict = json.load(f)
             return get_slackresponse(web_response)
 
-    def conversations_join(self, *args: Any, **kwrags: Any) -> SlackResponse:
-        pass
-
     def users_list(self, *args: Any, **kwrags: Any) -> SlackResponse:
         with open(os.path.join(TEST_DATA_DIR, "web_response_users_list.json")) as f:
             web_response: Dict = json.load(f)
@@ -54,6 +51,20 @@ class MockSlackClient(WebClient):
     ) -> SlackResponse:
         with open(
             os.path.join(TEST_DATA_DIR, "web_response_chat_getPermalink.json")
+        ) as f:
+            web_response: Dict = json.load(f)
+            return get_slackresponse(web_response)
+
+    def conversations_join(self, *, channel: str, **kwargs: Any) -> SlackResponse:
+        with open(
+            os.path.join(TEST_DATA_DIR, "web_response_conversations_join.json")
+        ) as f:
+            web_response: Dict = json.load(f)
+            return get_slackresponse(web_response)
+
+    def conversations_archive(self, *, channel: str, **kwargs: Any) -> SlackResponse:
+        with open(
+            os.path.join(TEST_DATA_DIR, "web_response_conversations_archive.json")
         ) as f:
             web_response: Dict = json.load(f)
             return get_slackresponse(web_response)
