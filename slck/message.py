@@ -4,7 +4,7 @@ from typing import Dict, List
 from slack_sdk import WebClient
 from slack_sdk.web import SlackResponse
 from slck.channel import ChannelManager
-from slck.user import User
+from slck.user import User, UserManager
 
 
 @dataclass
@@ -16,6 +16,12 @@ class Message:
     num_reply: int
     num_replyuser: int
     num_reaction: int
+
+    def identify_user(self, client: WebClient) -> None:
+        um: UserManager = UserManager(client)
+        user = um.find(id=self.user.id)
+        self.user.name = user["name"]
+        self.user.real_name = user["real_name"]
 
 
 def parse_message(message: Dict) -> Message:
@@ -63,9 +69,21 @@ class MessageManager:
             for message in response["messages"]:
                 if message["type"] == "message":
                     m = parse_message(message)
+                    m.identify_user(self.client)
                     messages.append(m)
             if response["has_more"] is True:
                 next_cursor = response["response_metadata"]["next_cursor"]
             else:
                 break
         return messages
+
+    def popular(
+        self,
+        channel: str,  # channel id or channel name (depends on argument `name`)
+        name: bool = True,  # if False, `channel` is considered as channel ID
+        k: int = 1,
+    ) -> List[Message]:
+        messages: List[Message] = sorted(
+            self.list(channel, name), key=lambda m: m.num_reaction, reverse=True
+        )
+        return messages[: min(len(messages), k)]

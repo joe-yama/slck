@@ -3,13 +3,13 @@
   "messages": [
     {
       "type": "message",
-      "user": "U012AB3CDE",
+      "user": "W012A3CDE",
       "text": "I find you punny and would like to smell your nose letter",
       "ts": "1512085950.000216"
     },
     {
       "type": "message",
-      "user": "U061F7AUR",
+      "user": "W07QCRPA4",
       "text": "What, you want to smell my shoes better?",
       "ts": "1512104434.000490"
     },
@@ -17,7 +17,7 @@
       "client_msg_id": "93e971cf-d7a3-498c-8280-2ac09f3a10a8",
       "type": "message",
       "text": "テスト！",
-      "user": "U021JKQFJUC",
+      "user": "W012A3CDE",
       "ts": "1622007981.001400",
       "team": "T021R3N359P",
       "blocks": [
@@ -49,7 +49,7 @@
       "client_msg_id": "4d50d26c-554f-4788-afda-f93941b646f4",
       "type": "message",
       "text": "いいね",
-      "user": "U021JKQFJUC",
+      "user": "W012A3CDE",
       "ts": "1622007986.001500",
       "team": "T021R3N359P",
       "blocks": [
