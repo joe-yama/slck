@@ -1,13 +1,11 @@
 from dataclasses import asdict
-from typing import List, Optional, Dict
+from typing import Dict, List, Optional
 
 from slack_sdk import WebClient
 from slack_sdk.web import SlackResponse
-
-
 from slck.channel import Channel
+from slck.message import Message, parse_message
 from slck.user import User
-from slck.message import Message
 
 
 class ChannelNotFoundError(Exception):
@@ -40,11 +38,17 @@ class ChannelManager:
                 break
         return hit_channels
 
-    def find(self, name: str) -> Dict:
-        for channel in self.list(prefix=name):
-            if channel.name == name:
-                return asdict(channel)
-        raise ChannelNotFoundError(f"Channel named {name} is not found.")
+    def find(
+        self,
+        name: Optional[str] = None,
+        id: Optional[str] = None,
+    ) -> Dict:
+        prefix = "" if name is None else name
+        for channel in self.list(prefix=prefix):
+            if id is None or channel.id == id:
+                if name is None or channel.name == name:
+                    return asdict(channel)
+        raise ChannelNotFoundError
 
 
 class UserManager:
@@ -91,5 +95,38 @@ class MessageManager:
     def __init__(self, client: WebClient) -> None:
         self.client = client
 
-    def list(self, channel: str, limit: int = 10) -> None:
-        pass
+    def list(
+        self,
+        channel_name: str = "",
+        channel_id: str = "",
+    ) -> List[Message]:
+        if channel_id == "" and channel_name == "":
+            raise ValueError(
+                "One of arguments (channel_id or channel_name) is required."
+            )
+        if channel_id and channel_name:
+            raise ValueError(
+                """
+                Recieved both of channel_id and channel_name.
+                Desired: Either one of arguments (channel_id or channel_name).
+            """
+            )
+        if channel_name:
+            channel_manager: ChannelManager = ChannelManager(self.client)
+            channel_id = channel_manager.find(name=channel_name)["id"]
+
+        messages: List[Message] = []
+        next_cursor: str = ""  # for pagenation
+        while True:
+            response: SlackResponse = self.client.conversations_history(
+                channel=channel_id, next_cursor=next_cursor
+            )
+            for message in response["messages"]:
+                if message["type"] == "message":
+                    m = parse_message(message)
+                    messages.append(m)
+            if response["has_more"] is True:
+                next_cursor = response["response_metadata"]["next_cursor"]
+            else:
+                break
+        return messages

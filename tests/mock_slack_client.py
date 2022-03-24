@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Dict, Any
+from typing import Any, Dict
 
 from slack_sdk import WebClient
 from slack_sdk.web import SlackResponse
@@ -37,5 +37,12 @@ class MockSlackClient(WebClient):
 
     def users_list(self, *args: Any, **kwrags: Any) -> SlackResponse:
         with open(os.path.join(TEST_DATA_DIR, "web_response_users_list.json")) as f:
+            web_response: Dict = json.load(f)
+            return get_slackresponse(web_response)
+
+    def conversations_history(self, *args: Any, **kwrags: Any) -> SlackResponse:
+        with open(
+            os.path.join(TEST_DATA_DIR, "web_response_conversations_history.json")
+        ) as f:
             web_response: Dict = json.load(f)
             return get_slackresponse(web_response)

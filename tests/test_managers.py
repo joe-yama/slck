@@ -1,16 +1,16 @@
+from typing import Dict, List
+
 import pytest
-from typing import List, Dict
-
-from slack_sdk import WebClient
-
-from slck.channel import Channel
-from slck.user import User
-from slck.managers import ChannelManager
-from slck.managers import UserManager
-from slck.managers import MessageManager
-from slck.managers import ChannelNotFoundError
-
 from mock_slack_client import MockSlackClient
+from slck.channel import Channel
+from slck.managers import (
+    ChannelManager,
+    ChannelNotFoundError,
+    MessageManager,
+    UserManager,
+)
+from slck.message import Message
+from slck.user import User
 
 
 class TestChannelManager:
@@ -32,17 +32,24 @@ class TestChannelManager:
         assert len(channels) == 1
         assert channels[0].name == "general"
 
-    def test__find_general_channel(self) -> None:
+    def test__find_general_channel_by_name(self) -> None:
         client: MockSlackClient = MockSlackClient()
         channel_manager: ChannelManager = ChannelManager(client)
-        channel: Dict = channel_manager.find("general")
+        channel: Dict = channel_manager.find(name="general")
         assert channel["name"] == "general"
         assert channel["id"] == "C111"
 
-    def test__find_random_channel(self) -> None:
+    def test__find_random_channel_by_name(self) -> None:
         client: MockSlackClient = MockSlackClient()
         channel_manager: ChannelManager = ChannelManager(client)
-        channel: Dict = channel_manager.find("random")
+        channel: Dict = channel_manager.find(name="random")
+        assert channel["name"] == "random"
+        assert channel["id"] == "C222"
+
+    def test__find_random_channel_by_id(self) -> None:
+        client: MockSlackClient = MockSlackClient()
+        channel_manager: ChannelManager = ChannelManager(client)
+        channel: Dict = channel_manager.find(id="C222")
         assert channel["name"] == "random"
         assert channel["id"] == "C222"
 
@@ -50,11 +57,11 @@ class TestChannelManager:
         client: MockSlackClient = MockSlackClient()
         channel_manager: ChannelManager = ChannelManager(client)
         with pytest.raises(ChannelNotFoundError):
-            channel_manager.find("fake-channel")
+            channel_manager.find(name="fake-channel")
 
 
 class TestUserManager:
-    def test__can_initialize(self) -> None:
+    def test__initialize(self) -> None:
         client: MockSlackClient = MockSlackClient()
         UserManager(client)
 
@@ -91,6 +98,17 @@ class TestUserManager:
 
 
 class TestMessageManager:
-    def test__can_initialize(self) -> None:
+    def test__initialize(self) -> None:
         client: MockSlackClient = MockSlackClient()
         MessageManager(client)
+
+    def test__list(self) -> None:
+        client: MockSlackClient = MockSlackClient()
+        message_manager: MessageManager = MessageManager(client)
+        messages: List[Message] = message_manager.list(channel_id="C111")
+        assert len(messages) == 4
+
+    # def test__list_real(self, token):
+    #     client: WebClient = WebClient(token)
+    #     message_manager: MessageManager = MessageManager(client)
+    #     messages: List[Message] = message_manager.list(channel_id="C037SCK8V27")

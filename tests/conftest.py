@@ -1,8 +1,7 @@
 import os
 
-import pytest
 import dotenv
-
+import pytest
 from mock_slack_client import MockSlackClient
 
 
