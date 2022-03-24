@@ -46,3 +46,12 @@ class MockSlackClient(WebClient):
         ) as f:
             web_response: Dict = json.load(f)
             return get_slackresponse(web_response)
+
+    def chat_getPermalink(
+        self, *, channel: str, message_ts: str, **kwargs
+    ) -> SlackResponse:
+        with open(
+            os.path.join(TEST_DATA_DIR, "web_response_chat_getPermalink.json")
+        ) as f:
+            web_response: Dict = json.load(f)
+            return get_slackresponse(web_response)

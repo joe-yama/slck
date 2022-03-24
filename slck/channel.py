@@ -1,5 +1,5 @@
-from dataclasses import asdict, dataclass
-from typing import Dict, List, Optional
+from dataclasses import dataclass
+from typing import List, Optional
 
 from slack_sdk import WebClient
 from slack_sdk.web import SlackResponse
@@ -41,10 +41,14 @@ class ChannelManager:
         self,
         name: Optional[str] = None,
         id: Optional[str] = None,
-    ) -> Dict:
+    ) -> List[Channel]:
         prefix = "" if name is None else name
+        channels: List[Channel] = []
         for channel in self.list(prefix=prefix):
             if id is None or channel.id == id:
                 if name is None or channel.name == name:
-                    return asdict(channel)
-        raise ChannelNotFoundError
+                    channels.append(channel)
+        if not channels:
+            raise ChannelNotFoundError
+        assert len(channels) == 1
+        return channels

@@ -1,5 +1,5 @@
-from dataclasses import asdict, dataclass
-from typing import Dict, List, Optional
+from dataclasses import dataclass
+from typing import List, Optional
 
 from slack_sdk import WebClient
 from slack_sdk.web import SlackResponse
@@ -29,7 +29,7 @@ class UserManager:
             )
             for user in response["members"]:
                 if user["is_bot"]:
-                    continue
+                    pass
                 hit_users.append(
                     User(
                         id=user["id"],
@@ -47,10 +47,14 @@ class UserManager:
         id: Optional[str] = None,
         name: Optional[str] = None,
         real_name: Optional[str] = None,
-    ) -> Dict:
+    ) -> List[User]:
+        users: List[User] = []
         for user in self.list():
             if id is None or user.id == id:
                 if name is None or user.name == name:
                     if real_name is None or user.real_name == real_name:
-                        return asdict(user)
-        raise UserNotFoundError
+                        users.append(user)
+        if not users:
+            raise UserNotFoundError
+        assert len(users) == 1
+        return users

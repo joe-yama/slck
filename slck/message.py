@@ -3,7 +3,7 @@ from typing import Dict, List
 
 from slack_sdk import WebClient
 from slack_sdk.web import SlackResponse
-from slck.channel import ChannelManager
+from slck.channel import Channel, ChannelManager
 from slck.user import User, UserManager
 
 
@@ -11,20 +11,25 @@ from slck.user import User, UserManager
 class Message:
     message_type: str
     user: User
+    channel: Channel
     ts: str
     text: str
     num_reply: int
     num_replyuser: int
     num_reaction: int
+    permalink: str = ""
 
     def identify_user(self, client: WebClient) -> None:
         um: UserManager = UserManager(client)
-        user = um.find(id=self.user.id)
-        self.user.name = user["name"]
-        self.user.real_name = user["real_name"]
+        self.user = um.find(id=self.user.id)[0]
+
+    def get_permalink(self, client: WebClient) -> None:
+        self.permalink: str = client.chat_getPermalink(
+            channel=self.channel.id, message_ts=self.ts
+        )["permalink"]
 
 
-def parse_message(message: Dict) -> Message:
+def parse_message(message: Dict, channel: Channel) -> Message:
     message_type: str = message["type"]
     user: User = User(id=message["user"])
     ts: str = message["ts"]
@@ -36,6 +41,7 @@ def parse_message(message: Dict) -> Message:
     return Message(
         message_type=message_type,
         user=user,
+        channel=channel,
         ts=ts,
         text=text,
         num_reply=num_reply,
@@ -53,22 +59,17 @@ class MessageManager:
         channel: str,  # channel id or channel name (depends on argument `name`)
         name: bool = True,  # if False, `channel` is considered as channel ID
     ) -> List[Message]:
-        channel_id: str = ""
-        if name:
-            channel_manager: ChannelManager = ChannelManager(self.client)
-            channel_id = channel_manager.find(name=channel)["id"]
-        else:
-            channel_id = channel
-
+        cm: ChannelManager = ChannelManager(self.client)
+        c: Channel = cm.find(name=channel)[0] if name else cm.find(id=channel)[0]
         messages: List[Message] = []
         next_cursor: str = ""  # for pagenation
         while True:
             response: SlackResponse = self.client.conversations_history(
-                channel=channel_id, next_cursor=next_cursor
+                channel=c.id, next_cursor=next_cursor
             )
             for message in response["messages"]:
                 if message["type"] == "message":
-                    m = parse_message(message)
+                    m = parse_message(message, channel=c)
                     m.identify_user(self.client)
                     messages.append(m)
             if response["has_more"] is True:
@@ -82,8 +83,15 @@ class MessageManager:
         channel: str,  # channel id or channel name (depends on argument `name`)
         name: bool = True,  # if False, `channel` is considered as channel ID
         k: int = 1,
+        permalink: bool = True,
     ) -> List[Message]:
         messages: List[Message] = sorted(
             self.list(channel, name), key=lambda m: m.num_reaction, reverse=True
         )
+        messages = messages[: min(len(messages), k)]
+
+        if permalink:
+            for m in messages:
+                m.get_permalink(self.client)
+
         return messages[: min(len(messages), k)]

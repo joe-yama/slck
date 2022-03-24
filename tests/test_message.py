@@ -21,7 +21,12 @@ class TestMessageManager:
         messages: List[Message] = message_manager.list(channel="general", name=True)
         assert len(messages) == 4
 
-    # def test__list_real(self, token):
-    #     client: WebClient = WebClient(token)
-    #     message_manager: MessageManager = MessageManager(client)
-    #     messages: List[Message] = message_manager.list(channel_id="C037SCK8V27")
+    def test__popular_message(self) -> None:
+        client: MockSlackClient = MockSlackClient()
+        message_manager: MessageManager = MessageManager(client)
+        popular_post: Message = message_manager.popular(
+            channel="general", name=True, k=1, permalink=True
+        )[0]
+        assert popular_post.user.id == "W012A3CDE"
+        assert popular_post.ts == "1622007986.001500"
+        assert popular_post.num_reaction == 3
