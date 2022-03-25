@@ -1,5 +1,6 @@
 # slck-cli: Simple cli tool to manage your slack workspace
 
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/slck-cli)
 ![PyPI](https://img.shields.io/pypi/v/slck-cli)
 [![GitHub license](https://img.shields.io/github/license/joe-yama/slck-cli)](https://github.com/joe-yama/slck-cli/blob/main/LICENSE)
 [![codecov](https://codecov.io/gh/joe-yama/slck-cli/branch/main/graph/badge.svg?token=H4VWW055ER)](https://codecov.io/gh/joe-yama/slck-cli)
