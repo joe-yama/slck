@@ -11,7 +11,6 @@ class TestUserManager:
         UserManager(client)
 
     def test__list_users(self) -> None:
-        # client: WebClient = WebClient(token)
         client: MockSlackClient = MockSlackClient()
         user_manager: UserManager = UserManager(client)
         users: List[User] = user_manager.list()

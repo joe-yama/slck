@@ -1,5 +1,16 @@
+import os
 import sys
-from typing import Dict
+from typing import Dict, Optional
+
+import dotenv
+
+
+def get_token() -> str:
+    dotenv.load_dotenv(override=True)
+    token: Optional[str] = os.getenv("SLACK_BOT_TOKEN")
+    if token is None:
+        raise KeyError("SLACK_BOT_TOKEN is not found.")
+    return token
 
 
 def confirm_user_input(question: str, default: str = "yes") -> bool:
