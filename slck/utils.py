@@ -13,7 +13,9 @@ def get_token() -> str:
     return token
 
 
-def confirm_user_input(question: str, default: str = "yes") -> bool:
+def confirm_user_input(
+    question: str, default: str = "yes", answer: Optional[str] = None
+) -> bool:
     """Ask a yes/no question via raw_input() and return their answer.
 
     "question" is a string that is presented to the user.
@@ -40,7 +42,7 @@ def confirm_user_input(question: str, default: str = "yes") -> bool:
 
     while True:
         sys.stdout.write(question + prompt)
-        choice: str = input().lower()
+        choice: str = input().lower() if answer is None else answer
         if choice == "":
             return valid[default]
         elif choice in valid:

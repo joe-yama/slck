@@ -1,11 +1,9 @@
-import os
-
-import dotenv
 import fire
 from slack_sdk import WebClient
 from slck.channel import ChannelManager
 from slck.message import MessageManager
 from slck.user import UserManager
+from slck.utils import get_token
 
 
 class SlackManager:
@@ -14,12 +12,6 @@ class SlackManager:
         self.channel = ChannelManager(self.__client)
         self.user = UserManager(self.__client)
         self.message = MessageManager(self.__client)
-
-
-def get_token() -> str:
-    dotenv.load_dotenv()
-    token: str = os.environ["SLACK_BOT_TOKEN"]
-    return token
 
 
 def main() -> None:
