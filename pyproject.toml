@@ -14,12 +14,13 @@ packages = [
 slck = "slck.cli:main"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8,<4"
 fire = "^0.4.0"
 slack-sdk = ">=3.0"
 python-dotenv = "^0.19.2"
 
 [tool.poetry.dev-dependencies]
+typed_ast = "*"
 pysen = {version = "^0.10.1", extras = ["lint"]}
 pytest = "^7.1.1"
 pytest-cov = "^3.0.0"
