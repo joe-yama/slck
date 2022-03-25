@@ -33,6 +33,37 @@ Message(message_type='message', user=User(id='U031L3JNBKS', name='taro', real_na
 pip install slck-cli
 ```
 
+## Preparation
+
+### Create SlackApp and Install to your workspace
+
+- [Create a new Slack app](https://api.slack.com/authentication/basics#creating)
+- [Add scopes to your Bot Token](https://api.slack.com/authentication/basics#scopes)  
+In order to use all the feature of `slck-cli` , add scopes bellow:
+  - `channels:history`
+  - `channels:join`
+  - `channels:manage`
+  - `channels:read`
+  - `groups:history`
+  - `groups:read`
+  - `groups:write`
+  - `im:history`
+  - `im:read`
+  - `im:write`
+  - `mpim:history`
+  - `mpim:read`
+  - `mpim:write`
+  - `users:read`
+- [Install app to your workspace](https://api.slack.com/authentication/basics#installing)
+
+### Set token
+
+Set your slack bot token ( `xoxb-...` ) to your environmental varialble `SLACK_BOT_TOKEN`
+
+```bash
+export SLACK_BOT_TOKEN = "xoxb-your-token"
+```
+
 ## License
 
 This software is released under the MIT License, see LICENSE.
