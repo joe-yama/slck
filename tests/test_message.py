@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from mock_slack_client import MockSlackClient
 from slck.message import Message, MessageManager
@@ -35,7 +35,11 @@ class TestMessageManager:
         client: MockSlackClient = MockSlackClient()
         message_manager: MessageManager = MessageManager(client)
         result: str = message_manager.award(channel="general", post=False)
-        expected: str = """最もリアクションを獲得したのは@spenglerさんのこのポスト！
-https://ghostbusters.slack.com/archives/C1H9RESGA/p135854651500008"""
+        expected: str = (
+            "最もリアクションを獲得したのは "
+            "<@W012A3CDE|spengler>さんのこのポスト！"
+            "おめでとうございます！:raised_hands:\n"
+            "https://ghostbusters.slack.com/archives/C1H9RESGA/p135854651500008"
+        )
         assert result is not None
         assert result == expected
