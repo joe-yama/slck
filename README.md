@@ -26,6 +26,14 @@ Channel(id='C02AFAUOK33', name='general')
 # most reacted post in the channel
 $ slck message popular general
 Message(message_type='message', user=User(id='U031L3JNBKS', name='taro', real_name='Taro Yamada'), channel=Channel(id='C02AFAUOK33', name='general'), ts='1647648476.156199', text='テスト', num_reply=0, num_replyuser=0, num_reaction=3, permalink='https://foo.slack.com/archives/C02AFAUOK33/p23471289471123')
+
+# post award message
+$ slck message award your-channel --post
+Bot is about to post award message:
+  最もリアクションを獲得したのは <@U031L3JNBKS|taro>さんのこのポスト！おめでとうございます！:raised_hands:
+https://foo.slack.com/archives/C02AFAUOK33/
+to tmc-zatsudan. Are you sure? [Y/n]Y
+Posted!
 ```
 
 ## Installation
