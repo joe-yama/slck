@@ -32,7 +32,7 @@ $ slck message award your-channel --post
 Bot is about to post award message:
   最もリアクションを獲得したのは <@U031L3JNBKS|taro>さんのこのポスト！おめでとうございます！:raised_hands:
 https://foo.slack.com/archives/C02AFAUOK33/
-to tmc-zatsudan. Are you sure? [Y/n]Y
+to your-channel. Are you sure? [Y/n]Y
 Posted!
 ```
 
