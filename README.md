@@ -55,6 +55,7 @@ In order to use all the feature of `slck-cli` , add scopes bellow:
   - `mpim:read`
   - `mpim:write`
   - `users:read`
+  - `chat:write`
 - [Install app to your workspace](https://api.slack.com/authentication/basics#installing)
 
 ### Set token

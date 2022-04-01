@@ -1,7 +1,7 @@
 import json
 import os
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from slack_sdk import WebClient
 from slack_sdk.web import SlackResponse
@@ -65,6 +65,15 @@ class MockSlackClient(WebClient):
     def conversations_archive(self, *, channel: str, **kwargs: Any) -> SlackResponse:
         with open(
             os.path.join(TEST_DATA_DIR, "web_response_conversations_archive.json")
+        ) as f:
+            web_response: Dict = json.load(f)
+            return get_slackresponse(web_response)
+
+    def chat_postMessage(
+        self, *, channel: str, text: Optional[str] = None, **kwargs: Any
+    ) -> SlackResponse:
+        with open(
+            os.path.join(TEST_DATA_DIR, "web_response_chat_postMessage.json")
         ) as f:
             web_response: Dict = json.load(f)
             return get_slackresponse(web_response)
