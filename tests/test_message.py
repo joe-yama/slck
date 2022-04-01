@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from mock_slack_client import MockSlackClient
 from slck.message import Message, MessageManager
@@ -30,3 +30,12 @@ class TestMessageManager:
         assert popular_post.user.id == "W012A3CDE"
         assert popular_post.ts == "1622007986.001500"
         assert popular_post.num_reaction == 3
+
+    def test__award_without_post(self) -> None:
+        client: MockSlackClient = MockSlackClient()
+        message_manager: MessageManager = MessageManager(client)
+        result: str = message_manager.award(channel="general", post=False)
+        expected: str = """最もリアクションを獲得したのは@spenglerさんのこのポスト！
+https://ghostbusters.slack.com/archives/C1H9RESGA/p135854651500008"""
+        assert result is not None
+        assert result == expected

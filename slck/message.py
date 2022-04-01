@@ -1,10 +1,11 @@
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from slack_sdk import WebClient
 from slack_sdk.web import SlackResponse
 from slck.channel import Channel, ChannelManager
 from slck.user import User, UserManager
+from slck.utils import confirm_user_input
 
 
 @dataclass
@@ -95,3 +96,26 @@ class MessageManager:
                 m.get_permalink(self.client)
 
         return messages[: min(len(messages), k)]
+
+    def award(self, channel: str, post: bool = False) -> str:
+        popular_message: Message = self.popular(
+            channel=channel, name=True, k=1, permalink=True
+        )[0]
+        userid: str = popular_message.user.id
+        username = popular_message.user.name
+        posting_text: str = (
+            f"最もリアクションを獲得したのは <@{userid}|{username}>さんのこのポスト！"
+            f"おめでとうございます！:raised_hands:\n{popular_message.permalink}"
+        )
+        if post:
+            if confirm_user_input(
+                f"""
+Bot is about to post award message:
+  {posting_text}
+to {channel}. Are you sure?"""
+            ):
+                self.client.chat_postMessage(channel=channel, text=posting_text)
+                return "Posted!"
+            else:
+                return "Award was canceled from user input."
+        return posting_text
